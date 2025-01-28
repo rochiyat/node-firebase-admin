@@ -107,6 +107,32 @@ const usersController = {
       return returnNonSuccess(req, res, 500, error.message);
     }
   },
+
+  getUsersBulk: async (req: Request, res: Response) => {
+    try {
+      const ids = req.params.ids;
+      const idsArray = ids.split(';');
+      const users = await db
+        .collection('user_cvs')
+        .where('id', 'in', idsArray)
+        .get();
+      const userData = users.docs.map((doc) => {
+        return {
+          id: doc.id,
+          ...doc.data(),
+        };
+      });
+      return returnSuccess(
+        req,
+        res,
+        200,
+        'Users fetched successfully',
+        userData
+      );
+    } catch (error: any) {
+      return returnNonSuccess(req, res, 500, error.message);
+    }
+  },
 };
 
 export default usersController;
