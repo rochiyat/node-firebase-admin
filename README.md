@@ -55,13 +55,25 @@ npm install
    - Rename the file to `serviceAccountKey.json` (or any name you prefer).
    - Update the `FIREBASE_SERVICE_ACCOUNT_KEY_PATH` in the `.env` file to point to this file.
 
-### 4. Set Up Environment Variables
+### 4. Set Up Service Account
 
-Create a `.env` file in the root directory and add the following environment variables:
+Create a `serviceAccount.json` file in the root directory and add the following service account:
 
 ```env
-PORT=3000
-FIREBASE_SERVICE_ACCOUNT_KEY_PATH=./serviceAccountKey.json
+{
+  "type": "",
+  "project_id": "",
+  "private_key_id": "",
+  "private_key": "",
+  "client_email": "",
+  "client_id": "",
+  "auth_uri": "",
+  "token_uri": "",
+  "auth_provider_x509_cert_url": "",
+  "client_x509_cert_url": "",
+  "universe_domain": ""
+}
+
 ```
 
 ### 5. Build and Run the Project
@@ -93,6 +105,8 @@ node-firebase-admin/
 ```
 
 ## Routes
+
+Postman Collection = https://www.postman.com/rochiyat-coding/share-api/collection/j8qvgii/firebase-admin?action=share&creator=4389128&active-environment=4389128-11f36788-2c13-4986-98a3-65ad7a430f0b
 
 ### Users
 
@@ -150,13 +164,5 @@ If you encounter any issues or have questions, please open an issue on the [GitH
 
 **Happy Coding!** 🚀
 ```
-
-### Penjelasan Tambahan:
-1. **Struktur Proyek**: Menjelaskan struktur folder proyek agar developer mudah memahami di mana file-file penting berada.
-2. **Langkah-Langkah Setup**: Memberikan panduan langkah demi langkah untuk mengatur Firebase Admin SDK dan environment variables.
-3. **Contoh Request**: Memberikan contoh request API untuk memudahkan pengujian.
-4. **Testing**: Menambahkan bagian testing untuk memastikan developer tahu cara menjalankan tes.
-5. **Kontribusi**: Menjelaskan cara berkontribusi ke proyek.
-6. **Dukungan**: Memberikan informasi tentang cara melaporkan masalah atau mendapatkan bantuan.
 
 Dengan `README.md` ini, developer lain dapat dengan mudah meng-clone, mengatur, dan menjalankan proyek Anda.
