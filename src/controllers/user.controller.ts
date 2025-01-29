@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { db } from '../configs/firebase';
-import { returnNonSuccess } from '../utils/helpers.util';
-import { returnSuccess } from '../utils/helpers.util';
+import { returnNonSuccess, returnSuccess } from '../utils/helpers.util';
 
 const usersController = {
   getUsers: async (req: Request, res: Response) => {
@@ -38,6 +37,59 @@ const usersController = {
         users
       );
     } catch (error: any) {
+      return returnNonSuccess(req, res, 500, error.message);
+    }
+  },
+
+  getDataByPublicUid: async (req: Request, res: Response) => {
+    try {
+      const { publicUid } = req.params;
+      const user = await db
+        .collection('user_cvs')
+        .where('public_uid', '==', publicUid)
+        .get();
+
+      if (user.empty) {
+        return returnNonSuccess(req, res, 404, 'User not found');
+      }
+
+      const doc = user.docs[0];
+      return returnSuccess(req, res, 200, 'User fetched successfully', {
+        id: doc.id,
+        ...doc.data(),
+      });
+    } catch (error: any) {
+      return returnNonSuccess(req, res, 500, error.message);
+    }
+  },
+
+  getDataByPublicUids: async (req: Request, res: Response) => {
+    try {
+      const { publicUids } = req.params;
+      const user = await db
+        .collection('user_cvs')
+        .where('public_uid', 'in', publicUids.split(';'))
+        .get();
+
+      if (user.empty) {
+        return returnNonSuccess(req, res, 404, 'User not found');
+      }
+
+      const userData = user.docs.map((doc) => {
+        return {
+          id: doc.id,
+          ...doc.data(),
+        };
+      });
+      return returnSuccess(
+        req,
+        res,
+        200,
+        'Users fetched successfully',
+        userData
+      );
+    } catch (error: any) {
+      console.log('error', error);
       return returnNonSuccess(req, res, 500, error.message);
     }
   },
@@ -87,6 +139,35 @@ const usersController = {
       const user = await db.collection('user_cvs').doc(id).update(req.body);
       const userData = {
         id,
+        ...req.body,
+      };
+      return returnSuccess(
+        req,
+        res,
+        200,
+        'User updated successfully',
+        userData
+      );
+    } catch (error: any) {
+      return returnNonSuccess(req, res, 500, error.message);
+    }
+  },
+
+  updateUserByPublicUid: async (req: Request, res: Response) => {
+    try {
+      const { publicUid } = req.params;
+      const user = await db
+        .collection('user_cvs')
+        .where('public_uid', '==', publicUid)
+        .get();
+
+      if (user.empty) {
+        return returnNonSuccess(req, res, 404, 'User not found');
+      }
+      const doc = user.docs[0];
+      await doc.ref.update(req.body);
+      const userData = {
+        id: doc.id,
         ...req.body,
       };
       return returnSuccess(

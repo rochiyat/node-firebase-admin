@@ -35,3 +35,33 @@ export function getUsers(req: Request, res: Response, next: NextFunction) {
   }
   next();
 }
+
+export function getUserByPublicUid(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const schema = Joi.object().keys({
+    publicUid: Joi.string().required(),
+  });
+  const { error } = schema.validate(req.params);
+  if (error) {
+    return res.status(400).json({ message: error.message });
+  }
+  next();
+}
+
+export function getUsersBulkByPublicUids(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const schema = Joi.object().keys({
+    publicUids: Joi.string().required(),
+  });
+  const { error } = schema.validate(req.params);
+  if (error) {
+    return res.status(400).json({ message: error.message });
+  }
+  next();
+}
