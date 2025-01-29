@@ -52,7 +52,7 @@ describe('getCollection', () => {
       new Error('Database error')
     );
 
-    await getCollection(req as Request, res as Response);
+    await collectionController.getCollection(req as Request, res as Response);
 
     expect(returnNonSuccess).toHaveBeenCalledWith(
       req,
