@@ -37,4 +37,10 @@ router.put(
   usersController.updateUsers
 );
 
+router.put(
+  '/bulk/public/:publicUids',
+  usersMiddleware.getUsersBulkByPublicUids,
+  usersController.updateUsersBulkByPublicUids
+);
+
 export default router;

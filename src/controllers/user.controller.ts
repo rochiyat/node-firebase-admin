@@ -182,6 +182,38 @@ const usersController = {
     }
   },
 
+  updateUsersBulkByPublicUids: async (req: Request, res: Response) => {
+    try {
+      const { publicUids } = req.params;
+      const publicUidsArray = publicUids.split(';');
+      const updatedUsers = [];
+      const user = await db
+        .collection('user_cvs')
+        .where('public_uid', 'in', publicUidsArray)
+        .get();
+      if (user.empty) {
+        return returnNonSuccess(req, res, 404, 'User not found');
+      }
+
+      for (const doc of user.docs) {
+        await doc.ref.update(req.body);
+        updatedUsers.push({
+          id: doc.id,
+          ...req.body,
+        });
+      }
+      return returnSuccess(
+        req,
+        res,
+        200,
+        'Users updated successfully',
+        updatedUsers
+      );
+    } catch (error: any) {
+      return returnNonSuccess(req, res, 500, error.message);
+    }
+  },
+
   updateUsers: async (req: Request, res: Response) => {
     try {
       const ids = req.params.ids;
