@@ -3,11 +3,6 @@
 import Joi from 'joi';
 import { Request, Response, NextFunction } from 'express';
 
-const userSchema = Joi.object({
-  name: Joi.string().required(),
-  email: Joi.string().email().required(),
-});
-
 export function getUser(req: Request, res: Response, next: NextFunction) {
   const schema = Joi.object().keys({
     id: Joi.string().required(),

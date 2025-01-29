@@ -6,7 +6,9 @@ import { returnSuccess } from '../utils/helpers.util';
 const usersController = {
   getUsers: async (req: Request, res: Response) => {
     try {
-      const users = await db.collection('user_cvs').get();
+      const { limit = 10 } = req.query;
+      const limitNumber = Math.min(Number(limit), 20);
+      const users = await db.collection('user_cvs').limit(limitNumber).get();
       const userData = users.docs.map((doc) => {
         return {
           id: doc.id,
@@ -19,6 +21,21 @@ const usersController = {
         200,
         'Users fetched successfully',
         userData
+      );
+    } catch (error: any) {
+      return returnNonSuccess(req, res, 500, error.message);
+    }
+  },
+
+  getUserCount: async (req: Request, res: Response) => {
+    try {
+      const users = await db.collection('user_cvs').count().get();
+      return returnSuccess(
+        req,
+        res,
+        200,
+        'User count fetched successfully',
+        users
       );
     } catch (error: any) {
       return returnNonSuccess(req, res, 500, error.message);
